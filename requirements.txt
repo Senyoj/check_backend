@@ -1,19 +1,15 @@
-# ── Core Framework ──
 fastapi
 uvicorn[standard]
 pydantic[email]
 pydantic-settings
 
-# ── Authentication ──
 firebase-admin
 python-jose[cryptography]
 python-multipart
 
-# ── OCR & Image Processing ──
 google-genai
 Pillow
 anyio
 
-# ── Utilities ──
 python-dotenv
 aiofiles

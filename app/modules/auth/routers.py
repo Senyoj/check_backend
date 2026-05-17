@@ -23,7 +23,7 @@ def firebase_login(body: FirebaseTokenRequest):
 
     access_token = create_access_token(user)
     
-    # Check if user is new in Firestore
+    # to Check if user is new in Firestore
     db = get_firestore_client()
     user_ref = db.collection("users").document(user.id)
     user_doc = user_ref.get()
@@ -31,7 +31,7 @@ def firebase_login(body: FirebaseTokenRequest):
     is_new = not user_doc.exists
     
     if is_new:
-        # Initialize user document if new
+        # this will Initialize user document if new
         user_ref.set({
             "email": user.email,
             "full_name": user.full_name,

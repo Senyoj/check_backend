@@ -13,12 +13,6 @@ We are building this application step-by-step. Currently, **Foundation** and **M
 ---
 
 ## Getting Started
-
-### Prerequisites
-- Python 3.10+
-- A Firebase project with a generated Service Account Private Key.
-
-### 1. Environment Setup
 Create a `.env` file in the root directory (use `.env.example` as a blueprint):
 ```env
 APP_NAME=check
