@@ -109,3 +109,47 @@ async def get_timetable(user_id: str) -> dict:
         status_code=404,
         detail="No timetable found for this user.",
     )
+
+async def _fetch_latest_timetable(user_id: str) -> dict:
+    db = get_firestore_client()
+    docs = db.collection("users").document(user_id).collection("timetables").order_by(
+        "saved_at", direction="DESCENDING"
+    ).limit(1).stream()
+
+    for doc in docs:
+        return doc.to_dict()
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="No timetable found for this user.",
+    )
+
+async def create_timetable_share(user_id: str) -> dict:
+    latest_timetable = await _fetch_latest_timetable(user_id)
+    share_code = uuid.uuid4().hex
+
+    share_doc = {
+        "share_code": share_code,
+        "owner_id": user_id,
+        "timetable_id": latest_timetable["timetable_id"],
+        "saved_at": latest_timetable["saved_at"],
+        "shared_at": datetime.now(timezone.utc).isoformat(),
+        "schedule": latest_timetable["schedule"],
+    }
+
+    db = get_firestore_client()
+    db.collection("shares").document(share_code).set(share_doc)
+
+    return {"share_code": share_code, "message": "Share created successfully."}
+
+async def get_shared_timetable(code: str) -> dict:
+    db = get_firestore_client()
+    doc = db.collection("shares").document(code).get()
+
+    if not doc.exists:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Shared timetable not found for code: {code}",
+        )
+
+    return doc.to_dict()
