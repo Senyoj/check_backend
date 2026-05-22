@@ -6,6 +6,7 @@ import json
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 class Settings(BaseSettings):
+    
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
         env_file_encoding="utf-8",
@@ -23,7 +24,7 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE_MB: int = 10
 
     ALLOWED_ORIGINS: str | list[str] = [
-        "http://localhost:3000",
+        "http://localhost:5137",
         "https://checkapk.vercel.app",
     ]
     @field_validator("ALLOWED_ORIGINS", mode="before")

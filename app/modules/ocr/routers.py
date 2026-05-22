@@ -7,6 +7,7 @@ from app.modules.ocr.schemas import (
     SaveTimetableRequest,
     ShareCreateResponse,
     SharedTimetableResponse,
+    TimetableSetupRequest,
 )
 from app.modules.ocr.services import (
     run_ocr_pipeline,
@@ -15,6 +16,7 @@ from app.modules.ocr.services import (
     get_timetable,
     create_timetable_share,
     get_shared_timetable as fetch_shared_timetable,
+    setup_timetable,
 )
 
 router = APIRouter()
@@ -37,9 +39,10 @@ async def save_user_timetable(
 
 @router.get("/me")
 async def get_user_timetable(
+    include_inactive: bool = False,
     current_user: UserPayload = Depends(get_current_user),
 ):
-    return await get_timetable(current_user.id)
+    return await get_timetable(current_user.id, include_inactive=include_inactive)
 
 @router.post("/share/create", response_model=ShareCreateResponse, status_code=201)
 async def create_timetable_share_endpoint(
@@ -50,3 +53,12 @@ async def create_timetable_share_endpoint(
 @router.get("/share/{code}", response_model=SharedTimetableResponse)
 async def get_shared_timetable_endpoint(code: str):
     return await fetch_shared_timetable(code)
+
+@router.post("/{timetable_id}/setup")
+async def setup_user_timetable(
+    timetable_id: str,
+    body: TimetableSetupRequest,
+    current_user: UserPayload = Depends(get_current_user),
+):
+    return await setup_timetable(current_user.id, timetable_id, body)
+
