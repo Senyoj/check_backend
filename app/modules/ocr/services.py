@@ -23,15 +23,11 @@ logger = logging.getLogger(__name__)
 ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/webp", "image/bmp"}
 MAX_BYTES = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
-# ── Strategy 2: Model fallback chain ─────────────────────────────────────────
-# Ordered from newest/fastest to most available. Each model draws from a
-# different capacity pool, so if one is overloaded the next is often fine.
 _GEMINI_MODEL_CHAIN = [
-    "gemini-2.5-flash",        # Primary — best free-tier model as of May 2026
-    "gemini-2.5-flash-lite",   # Lighter sibling, different quota pool
+    "gemini-2.5-flash",  
+    "gemini-2.5-flash-lite",   
 ]
 
-# ── Strategy 1: Retry config ──────────────────────────────────────────────────
 _MAX_RETRIES_PER_MODEL = 2   # Attempts per model before moving to the next
 _BASE_BACKOFF_S = 1.5        # Initial wait in seconds
 _MAX_BACKOFF_S = 12.0        # Cap to avoid long waits on the free tier
