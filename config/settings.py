@@ -20,7 +20,8 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
-    FIREBASE_SERVICE_ACCOUNT_PATH: str = "./firebase-adminsdk.json"
+    FIREBASE_SERVICE_ACCOUNT_PATH: str = str(BASE_DIR / "firebase-adminsdk.json")
+    FIREBASE_SERVICE_ACCOUNT_JSON: str | None = None
     MAX_UPLOAD_SIZE_MB: int = 10
 
     ALLOWED_ORIGINS: str | list[str] = [
