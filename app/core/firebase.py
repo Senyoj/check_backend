@@ -13,8 +13,12 @@ def init_firebase():
                 raise RuntimeError(
                     f"Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON environment variable: {e}"
                 )
-        else:
+        elif settings.FIREBASE_SERVICE_ACCOUNT_PATH:
             cred = credentials.Certificate(settings.FIREBASE_SERVICE_ACCOUNT_PATH)
+        else:
+            raise RuntimeError(
+                "Neither FIREBASE_SERVICE_ACCOUNT_JSON nor FIREBASE_SERVICE_ACCOUNT_PATH is configured"
+            )
         firebase_admin.initialize_app(cred)
 
 def get_firestore_client():
