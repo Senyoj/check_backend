@@ -11,7 +11,6 @@ async def clean_up_invalid_token(fcm_token: str) -> None:
     """
     try:
         db = get_firestore_client()
-        # Find users who have this token in their fcm_tokens array
         users_ref = db.collection("users")
         query = users_ref.where("fcm_tokens", "array_contains", fcm_token).stream()
         
@@ -27,7 +26,6 @@ async def clean_up_invalid_token(fcm_token: str) -> None:
             if fcm_token in updates["fcm_tokens"]:
                 updates["fcm_tokens"].remove(fcm_token)
             
-            # If last_active matches, clear it or set it to another token in the list
             if doc_data.get("last_active_fcm_token") == fcm_token:
                 updates["last_active_fcm_token"] = updates["fcm_tokens"][0] if updates["fcm_tokens"] else None
             
